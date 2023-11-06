@@ -149,21 +149,24 @@ In the context of Copilot, a prompt is a piece of natural language description t
 **Complex algoritms generation**
 
 - In the `album-api/Controllers/AlbumController.cs` file try to complete the `GetByID` method by replace the current return:
-
 ```cs
-// GET api/<AlbumController>/5
+// GET api/album/5
 [HttpGet("{id}")]
-public IActionResult Get(int id)
+public IActionResult GetByID(int id)
 {
-    //here
+    return Ok();  
 }
+```
+Try add following prompt
+```cs
+// Call Album.GetAll() and filter result by id then return it
 ```
 
 - In the same file you can show other prompts like:
 ```cs
-// function that search album by name, artist or genre
+// Search album by title and artist
 
-// function that sort albums by name, artist or genre
+// Sort albums by title or artist
 ```
 
 ## Big tasks vs small tasks
@@ -210,7 +213,7 @@ Try to generate the code for the plot by cutting it into small pieces following 
 ```ts	
 import * as d3 from 'd3';
 
-// load the data from a json file and create the d3 svg in the then function
+// load the data from a json file and create the d3 svg in the function
 ```
 Inside the then function, starts by setting up the basics of the plot
 ```ts	
@@ -235,43 +238,6 @@ From there you can just ask to copilot to complete the chart
 You will **always** get better results by cutting big task into small chunks with copilot autocomplete. It's also a good way to show that copilot is not magic and you have to use it with your other IDE feature and your developer logic.
 
 </div>
-
-## Code Documentation 
-
-Copilot can understand a natural language prompt and generate code and because it's just language to it, it can also `understand code and explain it in natural language` to help you document your code.
-
-### Simple documentation comment
-
-To see that just put you pointer on top of a Class, a method or any line of code and start typing the comment handler for the selected language to trigger copilot. In language like Java, C# or TS for example, just type `// `and let the magic happen.
-
-Here is an example in the `albums-viewer/routes/index.js` file. Insert a line and start typing on line 13 inside the `try block`
-
-```js
-router.get("/", async function (req, res, next) {
-  try {
-    // Invoke the album-api via Dapr
-    const url = `http://127.0.0.1:${DaprHttpPort}/v1.0/invoke/${AlbumService}/method/albums`;
-
-```
-
-Continue to play with it and see what happens on other pieces of code.
-
-### Standardized documentation comment (JavaDoc, JsDoc, etc...)
-
-For this one, to trigger the documentation comment generation, you need to respect the specific comment format:
--  `/**` (for JS/TS) in the `index.js` file for example
-- `///` for C# in the `AlbumController.cs` of the AlbumApi file for example
-
-```cs
-/// <summary>
-/// function that returns a single album by id
-/// </summary>
-/// <param name="id"></param>
-/// <returns></returns>
-[HttpGet("{id}")]
-public IActionResult Get(int id)
-```
-
 
 ## Tests
 
@@ -321,16 +287,14 @@ import {validateDate, validateIPV6} from '../utils/validators';
 Boom!
 ```ts	
 describe('validateDate', () => {
-    it('should return a date object when given a valid date string', () => {
-        const date = '01/01/2019';
-        const expectedDate = new Date(2019, 0, 1);
-        expect(validateDate(date)).to.deep.equal(expectedDate);
-    });
-
-    it('should throw an error when given an invalid date string', () => {
-        const date = '01/01/2019';
-        expect(() => validateDate(date)).to.throw();
-    });
+  it('should return a Date object', () => {
+    const date = validateDate('01/01/2020');
+    expect(date).to.be.an.instanceof(Date);
+  });
+  it('should return the correct date', () => {
+    const date = validateDate('01/01/2020');
+    expect(date).to.eql(new Date('2020-01-01'));
+  });
 });
 ```
 
@@ -346,7 +310,7 @@ describe('validateDate', () => {
 
 ### Step 1: generate from scratch
 
-- Create a new file `pipeline.yml` in the `.github/workflow` folder of the project and start typing the following prompt:
+- Create a new file `pipeline.yaml` in the `.github/workflow` folder of the project and start typing the following prompt:
 
 ```yml
 # Github Action pipeline that runs on push to main branch
@@ -363,7 +327,7 @@ describe('validateDate', () => {
 - You probably have a github action workflow with at least a "login" task to your container registry and a "docker build and deploy" task. Add a new comment after those tasks to tag the docker image with the github run id and push it to the registry:
 
 ```yml
-# tag the image with the github run id and push to docker hub
+# tag the image with the github run id and push to ACR
 ```
 
 - you can play with other prompts like:
@@ -444,7 +408,7 @@ public IActionResult Get(int id)
 
 Copilot is also very powerfull to help you write documentation. It can generate `markdown` and `html` code and accelerate the writing of your readme.md files like for this one for example.
 
-You can show that by creating a new file `demo.md` in the root of the project and start typing the following prompt:
+You can show that by creating a new file `Demo.md` in the root of the project and start typing the following prompt:
 
 ```md
 # Github Copilot documentation
@@ -475,13 +439,13 @@ To start using Github Copilot Chat, you first need to
 
 We will use the same repository as the previous section to show how to use Copilot Chat to improve code quality. If you already have it, you can skip this step.
 
-You need to clone the following GitHub Repository: [Github Copilot Demo](https://github.com/Philess/gh-copilot-demo)
+You need to clone the following GitHub Repository: [Github Copilot Workshop](https://github.com/huangyingting/github-copilot)
 
 This repository is a code starter that will help you experiment all capabilities with GitHub Copilot. Take the time to look at the architecture design displayed on the page and when you're ready, clone the repository from the command line and open it in VS Code.
 
 ``` bash
-git clone https://github.com/Philess/gh-copilot-demo
-cd gh-copilot-demo
+git clone https://github.com/huangyingting/github-copilot
+cd github-copilot
 code .
 ```
 
